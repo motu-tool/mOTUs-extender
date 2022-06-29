@@ -1,0 +1,12 @@
+motus	manual_update
+#	database
+nr	manual_update
+cen	manual_update
+#	scripts
+append	manual_update
+map_genes_to_mOTUs	manual_update
+map_mOTUs_to_LGs	manual_update
+runBWA	manual_update
+#	taxonomy
+specI_tax	manual_update
+mOTULG_tax	manual_update
