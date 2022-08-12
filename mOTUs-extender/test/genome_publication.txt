@@ -1,0 +1,8 @@
+Buck, M., Garcia, S.L., Fernandez, L. et al. 
+
+Comprehensive dataset of shotgun metagenomes 
+from oxygen stratified freshwater lakes and ponds. 
+
+Sci Data 8, 131 (2021). 
+
+https://doi.org/10.1038/s41597-021-00910-1

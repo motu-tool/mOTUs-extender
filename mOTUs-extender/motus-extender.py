@@ -363,7 +363,7 @@ Other options:
     create_db_command = f'sh {SCRIPT_DIR}/extend_mOTUs_generateDB.sh {genome_list_file} {db_prefix} {taxonomy_file} {input_workfolder}/extension/ {SCRIPT_DIR}/ {input_workfolder}/temp_db_folder/ {threads}'
     check_call(create_db_command)
 
-    versions_command = f"sed -i 's/manual_update/{MOTUS_EXTENDER_VERSION}_{db_prefix}/g'{input_workfolder}/extension/{db_prefix}/db_mOTU/db_mOTU_versions"
+    versions_command = f"sed -i 's/manual_update/{MOTUS_EXTENDER_VERSION}_{db_prefix}/g' {input_workfolder}/extension/{db_prefix}/db_mOTU/db_mOTU_versions"
     check_call(versions_command)
 
 

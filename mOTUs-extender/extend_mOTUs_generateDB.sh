@@ -73,6 +73,8 @@ cat $new_database_folder/dbs/${genome_ID}/${genome_ID}.map2genome
 done < $new_database_folder/$newDBName/genomes.filtered.list > $new_database_folder/$newDBName/${newDBName}.new.map2genome
 cut -f2 $new_database_folder/$newDBName/${newDBName}.new.map2genome | sort -u > $new_database_folder/$newDBName/${newDBName}.new.genomeIDs
 
+python $scriptDir/map2genome.py $new_database_folder/$newDBName/${newDBName}.new.map2genome $new_database_folder/$newDBName/${newDBName}.new.map2genome_v5
+
 while read genome_ID;
 do
 cat $new_database_folder/dbs/${genome_ID}/${genome_ID}.genes.len
@@ -96,7 +98,7 @@ while read line;
 do
 python $scriptDir/dereplicate_sequences.py $new_database_folder/$newDBName/sequences/$line.fna $new_database_folder/$newDBName/sequences/$line.derep100.fna $new_database_folder/$newDBName/sequences/$line.derep100.clstr
 vsearch --sortbylength $new_database_folder/$newDBName/sequences/$line.derep100.fna --output $new_database_folder/$newDBName/sequences/$line.derep100.sorted.fna
-vsearch --threads ${threads} --allpairs_global $new_database_folder/$newDBName/sequences/$line.derep100.sorted.fna --id 0.0 --mincols 20 --blast6out $new_database_folder/$newDBName//vsearch//$line.derep100.m8
+vsearch --threads ${threads} --allpairs_global $new_database_folder/$newDBName/sequences/$line.derep100.sorted.fna --id 0.6 --mincols 20 --blast6out $new_database_folder/$newDBName//vsearch//$line.derep100.m8
 python $scriptDir/rereplicate_alignments.py $new_database_folder/$newDBName/sequences/$line.derep100.clstr  $new_database_folder/$newDBName//vsearch//$line.derep100.m8 $new_database_folder/$newDBName//vsearch//$line.m8
 done < $mOTU_MG_file
 
@@ -137,7 +139,9 @@ echo "Duplicated entry in new_database_folder/$newDBName/${newDBName}.new.map2ge
 exit 1
 fi
 
-python $scriptDir/combineDistances_4_useMap.py $new_database_folder/$newDBName/vsearch/files_normalized.txt $new_database_folder/$newDBName/${newDBName}.new.len $new_database_folder/$newDBName/${newDBName}.new.genomeIDs $new_database_folder/$newDBName/${newDBName}.new.map2genome $new_database_folder/$newDBName/vsearch/AllCOGs.normalized.excludedPairs $new_database_folder/$newDBName/vsearch/combined.normalized.new.m8
+python $scriptDir/combineDistances_5.py -d 55.0 -c 3 $new_database_folder/$newDBName/vsearch/files_normalized.txt $new_database_folder/$newDBName/${newDBName}.new.len $new_database_folder/$newDBName/${newDBName}.new.genomeIDs $new_database_folder/$newDBName/${newDBName}.new.map2genome_v5 $new_database_folder/$newDBName/vsearch/AllCOGs.normalized.excludedPairs $new_database_folder/$newDBName/vsearch/combined.normalized.new.m8
+
+#python $scriptDir/combineDistances_4_useMap.py $new_database_folder/$newDBName/vsearch/files_normalized.txt $new_database_folder/$newDBName/${newDBName}.new.len $new_database_folder/$newDBName/${newDBName}.new.genomeIDs $new_database_folder/$newDBName/${newDBName}.new.map2genome $new_database_folder/$newDBName/vsearch/AllCOGs.normalized.excludedPairs $new_database_folder/$newDBName/vsearch/combined.normalized.new.m8
 
 
 python $scriptDir/clusterUsingDistsCutoff_4_conComp_3.py $new_database_folder/$newDBName/vsearch/combined.normalized.new.m8 $new_database_folder/$newDBName/${newDBName}.new.genomeIDs $cutoff $new_database_folder/$newDBName/vsearch/$newDBName.clustering -d ID -l average
@@ -224,8 +228,8 @@ cat $mOTU_folder/db_mOTU/db_mOTU_taxonomy_meta-mOTUs.tsv $new_database_folder/$n
 
 
 
-bwa index $new_database_folder/$newDBName/db_mOTU/db_mOTU_DB_CEN.fasta
-bwa index $new_database_folder/$newDBName/db_mOTU/db_mOTU_DB_NR.fasta
+bwa index -b 1000000000 $new_database_folder/$newDBName/db_mOTU/db_mOTU_DB_CEN.fasta
+bwa index -b 1000000000 $new_database_folder/$newDBName/db_mOTU/db_mOTU_DB_NR.fasta
 
 bwa mem $new_database_folder/$newDBName/db_mOTU/db_mOTU_DB_NR.fasta $mOTU_folder/db_mOTU/db_mOTU_test/test1_single.fastq | grep "^@SQ"  > $new_database_folder/$newDBName/db_mOTU/db_mOTU_bam_header_NR
 bwa mem $new_database_folder/$newDBName/db_mOTU/db_mOTU_DB_CEN.fasta $mOTU_folder/db_mOTU/db_mOTU_test/test1_single.fastq | grep "^@SQ"  > $new_database_folder/$newDBName/db_mOTU/db_mOTU_bam_header_CEN

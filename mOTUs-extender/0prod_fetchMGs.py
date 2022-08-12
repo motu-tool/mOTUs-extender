@@ -6,6 +6,7 @@ script_folder = os.path.normpath(config['scriptfolder']) + '/'
 input_path = os.path.normpath(config['infolder']) + '/'
 out_path = os.path.normpath(config['outfolder']) + '/'
 temp_db_folder_path = os.path.normpath(config['temp_db_folder']) + '/'
+mapfile = config['mapfile']
 dest_path = out_path + 'genes/'
 dest_path_extension = out_path + 'extension/'
 
@@ -16,7 +17,8 @@ maxcount = 100000000000000
 
 
 donefiles = set(glob.glob(dest_path + '*prodigal_fetchMGs.done'))
-genomes = sorted(glob.glob(input_path + '*fa'))
+genomes = config['genomes'].split(',')#sorted(glob.glob(input_path + '*fa'))
+
 genomes = genomes[:maxcount]
 
 prodigal_fetchMGs_marker_files = []
@@ -33,7 +35,7 @@ rule all:
 
 rule prodigalfetchMgs:
     input:
-        fa = input_path + '{sample}.fa'
+        fa = ancient(input_path + '{sample}.fa')
     output:
         marker = touch(dest_path + '{sample}/{sample}.prodigal_fetchMGs.done')
     params:
@@ -51,7 +53,10 @@ rule prodigalfetchMgs:
         1
     shell:
         '''
+        rm -rf {params.outdir}*
+        rm -rf {dest_path_extension}dbs/{wildcards.sample}
         command="
+
         mkdir -p {params.outdir}genome/
         mkdir -p {params.outdir}prodigal/
         mkdir -p {params.outdir}fetchMGs/
@@ -64,8 +69,9 @@ rule prodigalfetchMgs:
         rm -r {params.outdir}fetchMGs/{wildcards.sample}-bestMGs/hmmResults/
         rm -r {params.outdir}fetchMGs/{wildcards.sample}-bestMGs/temp/
         if [ -f {params.outdir}fetchMGs/{wildcards.sample}-bestMGs-renamed/motus.mgs.count.ok ]; then
-            sh {script_folder}/extend_mOTUs_addMarkerGenes.sh {input.fa} {wildcards.sample} {dest_path_extension} {script_folder} {temp_db_folder_path} {params.outdir}fetchMGs/{wildcards.sample}-bestMGs-renamed/
+            sh {script_folder}/extend_mOTUs_addMarkerGenes.sh {input.fa} {wildcards.sample} {dest_path_extension} {script_folder} {temp_db_folder_path} {params.outdir}fetchMGs/{wildcards.sample}-bestMGs-renamed/ {mapfile}
         fi
+        
         ";
         echo "$command" > {log.command};
         eval "$command" &> {log.log}
