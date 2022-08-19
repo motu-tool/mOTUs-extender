@@ -30,7 +30,7 @@ The mOTU extender was tested with:
 * `snakemake 6.15.5`
 * `vsearch 2.14.1`
 * `prodigal 2.6.3`
-* `fetchMGs 1.2`
+* `fetchMGs 1.2` ([link](https://github.com/motu-tool/fetchMGs))
 
 
 Installation
