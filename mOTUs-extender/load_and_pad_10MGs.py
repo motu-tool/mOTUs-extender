@@ -203,7 +203,7 @@ def main():
         pathlib.Path(empty_m8_file).touch(exist_ok=True)
 
     all_notab_m8_file = f'{markergenes2_folder}all.notab.m8'
-    command = f'vsearch --threads 1 --usearch_global {all_notab_fasta_file} --db {vsearch_database} --id 0.0  --maxaccepts 1000 --maxaccepts 1000 --mincols 20 --blast6out {all_notab_m8_file}'
+    command = f'vsearch --threads 1 --usearch_global {all_notab_fasta_file} --strand both --db {vsearch_database} --id 0.0  --maxaccepts 1000 --maxaccepts 1000 --mincols 20 --blast6out {all_notab_m8_file}'
     print(f'Creating alignment file: {all_notab_m8_file}')
     try:
         print(f'Executing command: {command}')
