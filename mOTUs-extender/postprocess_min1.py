@@ -33,8 +33,8 @@ def main():
     min1_unpadded_fasta_file = db_folder + '/min1_db_mOTU/db_mOTU_DB_NR_unpadded.fasta'
 
     if not pathlib.Path(min1_vs_ext_mgs_file).exists():
-        print(f'vsearch --threads {threads} --usearch_global {min1_unpadded_fasta_file} --db {ext_mgs_file} --id 0.8  --maxaccepts 100 --maxrejects 100 --mincols 20 --alnout {min1_vs_ext_mgs_file}.aln --blast6out {min1_vs_ext_mgs_file}')
-        subprocess.check_call(f'vsearch --threads {threads} --usearch_global {min1_unpadded_fasta_file} --db {ext_mgs_file} --id 0.8  --maxaccepts 100 --maxrejects 100 --mincols 20 --alnout {min1_vs_ext_mgs_file}.aln --blast6out {min1_vs_ext_mgs_file}',shell=True)
+        print(f'vsearch --threads {threads} --usearch_global {min1_unpadded_fasta_file} --strand both --db {ext_mgs_file} --id 0.8  --maxaccepts 100 --maxrejects 100 --mincols 20 --alnout {min1_vs_ext_mgs_file}.aln --blast6out {min1_vs_ext_mgs_file}')
+        subprocess.check_call(f'vsearch --threads {threads} --usearch_global {min1_unpadded_fasta_file} --strand both --db {ext_mgs_file} --id 0.8  --maxaccepts 100 --maxrejects 100 --mincols 20 --alnout {min1_vs_ext_mgs_file}.aln --blast6out {min1_vs_ext_mgs_file}',shell=True)
 
 
     mg_2_cutoff = {}
