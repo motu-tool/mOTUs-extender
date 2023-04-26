@@ -1,4 +1,4 @@
-set -euxo pipefail
+#set -euxo pipefail
 #add genomes to mOTU DB
 
 sequence_file=$1

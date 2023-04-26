@@ -1,4 +1,4 @@
-set -euxo pipefail
+#set -euxo pipefail
 #filter genomes from mOTU DB
 
 
@@ -155,7 +155,8 @@ do
 paste $new_database_folder/$newDBName/vsearch/$newDBName.mOTU-LG.map.tsv.temp1 $new_database_folder/$newDBName/vsearch/$newDBName.mOTU-LG.map.tsv.temp1 | sed "s/^/${line}./"
 done < $mOTU_MG_file > $new_database_folder/$newDBName/vsearch/$newDBName.mOTU-LG.map.tsv
 
-awk -F $'\t' ' { t = $1; $1 = $2; $2 = t; print; } ' OFS=$'\t' $new_database_folder/$newDBName/vsearch/$newDBName.mOTU-LG.map.tsv > $new_database_folder/$newDBName/vsearch/$newDBName.mOTU-LG.map.tsv.temp
+python $scriptDir/swap_columns.py $new_database_folder/$newDBName/vsearch/$newDBName.mOTU-LG.map.tsv > $new_database_folder/$newDBName/vsearch/$newDBName.mOTU-LG.map.tsv.temp
+#awk -F $'\t' ' { t = $1; $1 = $2; $2 = t; print; } ' OFS=$'\t' $new_database_folder/$newDBName/vsearch/$newDBName.mOTU-LG.map.tsv > $new_database_folder/$newDBName/vsearch/$newDBName.mOTU-LG.map.tsv.temp
 
 python $scriptDir/reformatMapping2Clustering.py $new_database_folder/$newDBName/vsearch/$newDBName.mOTU-LG.map.tsv.temp $new_database_folder/$newDBName/vsearch/$newDBName.mOTU-LG.map.line.tsv
 
