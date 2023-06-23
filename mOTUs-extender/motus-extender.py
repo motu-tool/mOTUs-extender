@@ -8,7 +8,7 @@ import shutil
 
 
 
-MOTUS_EXTENDER_VERSION = '3.0.1'
+MOTUS_EXTENDER_VERSION = '3.1.0'
 SCRIPT_DIR = pathlib.Path(__file__).parent.resolve()
 
 ########################################################################################################################################################################################################
@@ -117,10 +117,10 @@ Input options:
     logging.info(f'Downloading mOTUs {MOTUS_EXTENDER_VERSION} database')
     orig_db_folder = input_workfolder.joinpath('orig_db')
     orig_db_folder.mkdir(parents=True, exist_ok=True)
-    download_command = f'curl https://zenodo.org/record/5140350/files/db_mOTU_v3.0.1.tar.gz -o {orig_db_folder}/db_mOTU_v3.0.1.tar.gz'
+    download_command = f'curl https://zenodo.org/record/7778108/files/db_mOTU_v3.1.0.tar.gz -o {orig_db_folder}/db_mOTU_v3.1.0.tar.gz'
     check_call(download_command)
     logging.info(f'Uncompressing mOTUs {MOTUS_EXTENDER_VERSION} database')
-    untar_command = f'tar -xzvf {orig_db_folder}/db_mOTU_v3.0.1.tar.gz -C {orig_db_folder}'
+    untar_command = f'tar -xzvf {orig_db_folder}/db_mOTU_v3.1.0.tar.gz -C {orig_db_folder}'
     check_call(untar_command)
     logging.info(f'Preparing mOTUs {MOTUS_EXTENDER_VERSION} database for extension')
     prepare_db_command = f'python {SCRIPT_DIR}/prepare_mOTUs.py {orig_db_folder}/db_mOTU/ {input_workfolder}/temp_db_folder'
@@ -187,8 +187,8 @@ Other options:
         shutdown(0)
 
     # copy mOTU.v3.0.mOTU-LG.map.gz to workfolder
-    motu_map_file = f'{input_workfolder}/mOTU.v3.0.mOTU-LG.map'
-    unzip_command = f'gunzip -c {SCRIPT_DIR}/mOTU.v3.0.mOTU-LG.map.gz > {motu_map_file}'
+    motu_map_file = f'{input_workfolder}/mOTU.v3.1.mOTU-LG.map'
+    unzip_command = f'gunzip -c {SCRIPT_DIR}/mOTU.v3.1.mOTU-LG.map.gz > {motu_map_file}'
     check_call(unzip_command)
     # check the number of genomes
 
@@ -345,8 +345,8 @@ Other options:
         logging.error(f'Taxonomy file {taxonomy_file} does not exist. Please provide a valid file')
         shutdown(1)
 
-    # copy mOTU.v3.0.mOTU-LG.map.gz to workfolder
-    motu_map_file = f'{input_workfolder}/mOTU.v3.0.mOTU-LG.map'
+    # copy mOTU.v3.1.mOTU-LG.map.gz to workfolder
+    motu_map_file = f'{input_workfolder}/mOTU.v3.1.mOTU-LG.map'
     membership_file = input_workfolder.joinpath('mOTUs.membership.tsv')
     novel_genomes  = [line.strip().split('\t')[0] for line in membership_file.read_text().splitlines() if 'Novel' in line]
     all_taxonomy_entries = {line.strip().split('\t')[0]: line.strip().split('\t')[1:]  for line in taxonomy_file.read_text().splitlines() if not line.startswith('#')}

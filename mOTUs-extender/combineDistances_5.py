@@ -209,7 +209,7 @@ def fillDistMatrix(distFileName, dictGene2Genome, dictGene2OG, dictGeneLengths, 
             OG_2 = dictGene2OG[strGeneID_2]
             
             if (OG_1 != OG_2):
-                sys.stderr.write(str(strGeneID_1) + " " + str(OG_1) + " " + str(strGeneID_2) + " " + str(OG_2) + " have a distance but are annotated to different OGs.\n")
+                sys.stderr.write(str(strGeneID_1) + " cog1=" + str(OG_1) + " " + str(strGeneID_2) + " cog2=" + str(OG_2) + " have a distance but are annotated to different OGs.\n")
             
 #########
 #            if (strGeneID_1.count("|") > 1):

@@ -14,6 +14,7 @@ import collections
 def main():
     parser = argparse.ArgumentParser(description='Postprocess the new motus database by adding -1 MGs that are distant enough to new ext-MGs', add_help = True)
     parser.add_argument('db', action="store", help='The updated database folder (same as in prepare_mOTUs.py)')
+    parser.add_argument('reffasta', action="store", help='The padded fasta file with sequences that will be extended.')
     parser.add_argument('newdbfolder', action="store", help='The folder with the file with the new ext-MGs')
     parser.add_argument('cutoffs', action="store", help='10MGs and their cutoff as a file')
     parser.add_argument('threads', action="store", help='threads')
@@ -23,18 +24,18 @@ def main():
     newdbfolder = args.newdbfolder
     threads = int(args.threads)
     cutoffs_file = args.cutoffs
-
+    maxaccepts = 1000
+    maxrejects = 1000
     min_coverage = 0.8
 
-    ext_mgs_file = glob.glob(newdbfolder + '/*padded')[0]
+    ext_mgs_file = args.reffasta
 
-    min1_vs_ext_mgs_file = ext_mgs_file + '_min1.m8'
+    min1_vs_ext_mgs_file = newdbfolder + '/min1_vs_padded.m8'
 
     min1_unpadded_fasta_file = db_folder + '/min1_db_mOTU/db_mOTU_DB_NR_unpadded.fasta'
 
-    if not pathlib.Path(min1_vs_ext_mgs_file).exists():
-        print(f'vsearch --threads {threads} --usearch_global {min1_unpadded_fasta_file} --strand both --db {ext_mgs_file} --id 0.8  --maxaccepts 100 --maxrejects 100 --mincols 20 --alnout {min1_vs_ext_mgs_file}.aln --blast6out {min1_vs_ext_mgs_file}')
-        subprocess.check_call(f'vsearch --threads {threads} --usearch_global {min1_unpadded_fasta_file} --strand both --db {ext_mgs_file} --id 0.8  --maxaccepts 100 --maxrejects 100 --mincols 20 --alnout {min1_vs_ext_mgs_file}.aln --blast6out {min1_vs_ext_mgs_file}',shell=True)
+    #if not pathlib.Path(min1_vs_ext_mgs_file).exists():
+    subprocess.check_call(f'vsearch --threads {threads} --usearch_global {min1_unpadded_fasta_file} --db {ext_mgs_file} --id 0.8  --maxaccepts {maxaccepts} --maxrejects {maxrejects} --mincols 20 --alnout {min1_vs_ext_mgs_file}.aln --blast6out {min1_vs_ext_mgs_file}',shell=True)
 
 
     mg_2_cutoff = {}
@@ -53,7 +54,7 @@ def main():
             splits = line.strip().split()
 
             query = splits[0]
-            cog = query.rsplit('.', 1)[-1]
+            cog = query.split('.')[1].split('-')[0]#query.rsplit('.', 1)[-1]
             cutoff = mg_2_cutoff[cog]
             ref = splits[1]
             percid = float(splits[2])
@@ -191,7 +192,7 @@ def main():
         for line in inhandle:
             allmgcs = line.strip().split()[1].split(';')
             mgcs = ';'.join([mgc for mgc in allmgcs if mgc not in mgcs_to_remove])
-        outhandle.write(f'unassigned\t{mgcs}\n')
+        outhandle.write(f'unassigned\t{mgcs}')
 
     print('################################################################')
 
@@ -283,8 +284,8 @@ def main():
     with open(db_mOTU_padding_coordinates_CEN_file) as inhandle, open(updated_db_mOTU_padding_coordinates_CEN_file, 'w') as outhandle:
         for line in inhandle:
             splits = line.strip().split()
-            mg = splits[0].replace('NA.', '')
-            mg_orig_name = mg.replace('_C', '.C')
+            mg = splits[0]#.replace('NA.', '')
+            mg_orig_name = mg[::-1].replace('_', '.', 1)[::-1]
             if mg_orig_name not in mgs_to_remove:
                 outhandle.write(line)
                 written_mgs += 1
@@ -307,8 +308,8 @@ def main():
     with open(db_mOTU_DB_CEN_fastaannotations_file) as inhandle, open(updated_db_mOTU_DB_CEN_fastaannotations_file, 'w') as outhandle:
         for line in inhandle:
             splits = line.strip().split()
-            mg = splits[1].replace('NA.', '')
-            mg_orig_name = mg.replace('_C', '.C')
+            mg = splits[1]#.replace('NA.', '')
+            mg_orig_name = mg[::-1].replace('_', '.', 1)[::-1]#mg.replace('_C', '.C')
             if mg_orig_name not in mgs_to_remove:
                 outhandle.write(line)
                 written_mgs += 1
@@ -323,14 +324,14 @@ def main():
 
 
     updated_db_mOTU_DB_CEN_file = outputfolder + '/db_mOTU_DB_CEN.fasta'
-    print(f'Writing {db_mOTU_DB_CEN_file}')
+    print(f'Reading {db_mOTU_DB_CEN_file}')
     print(f'Writing {updated_db_mOTU_DB_CEN_file}')
     written_mgs = 0
     removed_mgs = 0
     with open(db_mOTU_DB_CEN_file) as inhandle, open(updated_db_mOTU_DB_CEN_file, 'w') as outhandle:
         for cnt, (header, sequence) in enumerate(FastaIO.SimpleFastaParser(inhandle), 1):
-            mg = header.replace('NA.', '')
-            mg_orig_name = mg.replace('_C', '.C')
+            mg = header#.replace('NA.', '')
+            mg_orig_name = mg[::-1].replace('_', '.', 1)[::-1]#mg.replace('_C', '.C')
             if mg_orig_name not in mgs_to_remove:
                 written_mgs += 1
                 outhandle.write(f'>{header}\n{sequence}\n')

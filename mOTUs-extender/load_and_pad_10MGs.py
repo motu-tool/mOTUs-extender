@@ -34,7 +34,7 @@ def get_sequences(seq_file):
     sequences = []
     with open(seq_file) as handle:
         for (header, sequence) in FastaIO.SimpleFastaParser(handle):
-            sequences.append((header, sequence.upper()))
+            sequences.append((header.split()[0], sequence.upper()))
     return sequences
 
 def revcomp(sequence):

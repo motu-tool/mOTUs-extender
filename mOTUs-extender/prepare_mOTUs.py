@@ -62,7 +62,7 @@ def main(argv=None):
         for line in handle:
             splits = line.strip().split()
             if splits[0] != '#':
-                if splits[1] == '2.6.0':
+                if splits[1] == '3.1.0':
                     print(f'Version of {splits[0]} is {splits[1]}. Correct version. Continue')
                 else:
                     print(f'Version of {splits[0]} is {splits[1]}. WRONG VERSION. Stopping')
@@ -232,7 +232,7 @@ def main(argv=None):
     with open(db_mOTU_padding_coordinates_CEN_file) as inhandle, open(min1_db_mOTU_padding_coordinates_CEN_file, 'w') as min1_handle, open(nomin1_db_mOTU_padding_coordinates_CEN_file, 'w') as nomin1_handle:
         for line in inhandle:
             splits = line.strip().split()
-            if splits[0].startswith('NA.'):
+            if splits[0].startswith('unassigned.'):
                 min += 1
                 min1_handle.write(f'{line.strip()}\n')
             else:
@@ -344,7 +344,7 @@ def main(argv=None):
     with open(db_mOTU_DB_CEN_fastaannotations_file) as inhandle, open(min1_db_mOTU_DB_CEN_fastaannotations_file, 'w') as min1_handle, open(nomin1_db_mOTU_DB_CEN_fastaannotations_file, 'w') as nomin1_handle:
         for line in inhandle:
             splits = line.strip().split()
-            if splits[1].startswith('NA.'):
+            if splits[1].startswith('unassigned.'):
                 min += 1
                 min1_handle.write(f'{line.strip()}\n')
             else:
@@ -373,7 +373,7 @@ def main(argv=None):
     with open(db_mOTU_bam_header_CEN_file) as inhandle, open(min1_db_mOTU_bam_header_CEN_file,'w') as min1_handle, open(nomin1_db_mOTU_bam_header_CEN_file, 'w') as nomin1_handle:
         for line in inhandle:
             splits = line.strip().split()
-            if splits[1].startswith('SN:NA.'):
+            if splits[1].startswith('SN:unassigned.'):
                 min += 1
                 min1_handle.write(f'{line.strip()}\n')
             else:
@@ -455,7 +455,7 @@ def main(argv=None):
         for cnt, (header, sequence) in enumerate(FastaIO.SimpleFastaParser(inhandle), 1):
             if cnt % 50000 == 0:
                 print(f'{cnt}/163789 MGs read')
-            if header.startswith('NA.'):
+            if header.startswith('unassigned.'):
                 min += 1
                 min1_handle.write(f'>{header}\n{sequence}\n')
             else:

@@ -68,7 +68,7 @@ while read line;
 do
 if [ -s "$new_database_folder/dbs/${genome_ID}/${genome_ID}_markerGenes2/$line.notab.fna" ]
 then
-vsearch --threads 1 --usearch_global $new_database_folder/dbs/${genome_ID}/${genome_ID}_markerGenes2/$line.notab.fna --db ${unpadded_mOTUseqsFile}.udb --id 0.8  --maxaccepts 100000 --mincols 20 --blast6out $new_database_folder/dbs/$genome_ID/vsearch/$line.distances_vs_db.m8
+vsearch --threads 1 --usearch_global $new_database_folder/dbs/${genome_ID}/${genome_ID}_markerGenes2/$line.notab.fna --db ${unpadded_mOTUseqsFile}.udb --id 0.8  --maxaccepts 100000 --mincols 20 --strand both --blast6out $new_database_folder/dbs/$genome_ID/vsearch/$line.distances_vs_db.m8
 else
 touch $new_database_folder/dbs/$genome_ID/vsearch/$line.distances_vs_db.m8
 fi

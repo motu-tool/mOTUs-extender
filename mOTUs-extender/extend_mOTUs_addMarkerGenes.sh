@@ -35,7 +35,7 @@ cat $new_database_folder/dbs/${genome_ID}/${genome_ID}.genes.len $db_mOTU_genes_
 #make global map file
 
 cat $new_database_folder/dbs/${genome_ID}/${genome_ID}.map2genome $mapfile > $new_database_folder/dbs/${genome_ID}/${genome_ID}.all.map2genome
-python $scriptDir/map2genome.py $new_database_folder/dbs/${genome_ID}/${genome_ID}.all.map2genome $new_database_folder/dbs/${genome_ID}/${genome_ID}.all.map2genome_v5
+python $scriptDir/map2genome_v6.py $new_database_folder/dbs/${genome_ID}/${genome_ID}.all.map2genome $new_database_folder/dbs/${genome_ID}/${genome_ID}.all.map2genome_v6
 
 #make global genome IDs file
 cut -f2 $new_database_folder/dbs/${genome_ID}/${genome_ID}.map2genome > $new_database_folder/dbs/$genome_ID/${genome_ID}.genomeIDs
@@ -60,7 +60,7 @@ cat $new_database_folder/dbs/$genome_ID/vsearch/normalized//COG*.distances_vs_db
 
 ls $new_database_folder/dbs/${genome_ID}/vsearch/normalized/COG*.distances_vs_db.50p.20n.m8  > $new_database_folder/dbs/${genome_ID}/vsearch/normalized//files_normalized.txt
 
-python $scriptDir/combineDistances_5.py -d 55.0 -c 3 $new_database_folder/dbs/${genome_ID}/vsearch/normalized//files_normalized.txt $new_database_folder/dbs/${genome_ID}/${genome_ID}.genes.all.len $new_database_folder/dbs/${genome_ID}/${genome_ID}.all.genomeIDs $new_database_folder/dbs/${genome_ID}/${genome_ID}.all.map2genome_v5 $new_database_folder/dbs/${genome_ID}/vsearch/normalized/AllCOGs.distances_vs_db.excludedPairs $new_database_folder/dbs/${genome_ID}/vsearch/combined.normalized.distances_vs_db.m8
+python $scriptDir/combineDistances_5.py -d 55.0 -c 3 $new_database_folder/dbs/${genome_ID}/vsearch/normalized//files_normalized.txt $new_database_folder/dbs/${genome_ID}/${genome_ID}.genes.all.len $new_database_folder/dbs/${genome_ID}/${genome_ID}.all.genomeIDs $new_database_folder/dbs/${genome_ID}/${genome_ID}.all.map2genome_v6 $new_database_folder/dbs/${genome_ID}/vsearch/normalized/AllCOGs.distances_vs_db.excludedPairs $new_database_folder/dbs/${genome_ID}/vsearch/combined.normalized.distances_vs_db.m8
 
 #python $scriptDir/combineDistances_4_useMap.py $new_database_folder/dbs/${genome_ID}/vsearch/normalized//files_normalized.txt $new_database_folder/dbs/${genome_ID}/${genome_ID}.genes.all.len $new_database_folder/dbs/${genome_ID}/${genome_ID}.all.genomeIDs $new_database_folder/dbs/${genome_ID}/${genome_ID}.all.map2genome $new_database_folder/dbs/${genome_ID}/vsearch/normalized/AllCOGs.distances_vs_db.excludedPairs $new_database_folder/dbs/${genome_ID}/vsearch/combined.normalized.distances_vs_db.m8
 

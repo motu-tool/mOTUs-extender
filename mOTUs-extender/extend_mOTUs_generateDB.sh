@@ -1,4 +1,4 @@
-#set -euxo pipefail
+set -euxo pipefail
 #filter genomes from mOTU DB
 
 
@@ -73,7 +73,7 @@ cat $new_database_folder/dbs/${genome_ID}/${genome_ID}.map2genome
 done < $new_database_folder/$newDBName/genomes.filtered.list > $new_database_folder/$newDBName/${newDBName}.new.map2genome
 cut -f2 $new_database_folder/$newDBName/${newDBName}.new.map2genome | sort -u > $new_database_folder/$newDBName/${newDBName}.new.genomeIDs
 
-python $scriptDir/map2genome.py $new_database_folder/$newDBName/${newDBName}.new.map2genome $new_database_folder/$newDBName/${newDBName}.new.map2genome_v5
+python $scriptDir/map2genome_v6.py $new_database_folder/$newDBName/${newDBName}.new.map2genome $new_database_folder/$newDBName/${newDBName}.new.map2genome_v6
 
 while read genome_ID;
 do
@@ -139,7 +139,7 @@ echo "Duplicated entry in new_database_folder/$newDBName/${newDBName}.new.map2ge
 exit 1
 fi
 
-python $scriptDir/combineDistances_5.py -d 55.0 -c 3 $new_database_folder/$newDBName/vsearch/files_normalized.txt $new_database_folder/$newDBName/${newDBName}.new.len $new_database_folder/$newDBName/${newDBName}.new.genomeIDs $new_database_folder/$newDBName/${newDBName}.new.map2genome_v5 $new_database_folder/$newDBName/vsearch/AllCOGs.normalized.excludedPairs $new_database_folder/$newDBName/vsearch/combined.normalized.new.m8
+python $scriptDir/combineDistances_5.py -d 55.0 -c 3 $new_database_folder/$newDBName/vsearch/files_normalized.txt $new_database_folder/$newDBName/${newDBName}.new.len $new_database_folder/$newDBName/${newDBName}.new.genomeIDs $new_database_folder/$newDBName/${newDBName}.new.map2genome_v6 $new_database_folder/$newDBName/vsearch/AllCOGs.normalized.excludedPairs $new_database_folder/$newDBName/vsearch/combined.normalized.new.m8
 
 #python $scriptDir/combineDistances_4_useMap.py $new_database_folder/$newDBName/vsearch/files_normalized.txt $new_database_folder/$newDBName/${newDBName}.new.len $new_database_folder/$newDBName/${newDBName}.new.genomeIDs $new_database_folder/$newDBName/${newDBName}.new.map2genome $new_database_folder/$newDBName/vsearch/AllCOGs.normalized.excludedPairs $new_database_folder/$newDBName/vsearch/combined.normalized.new.m8
 
@@ -191,7 +191,7 @@ done < $new_database_folder/$newDBName/genomes.filtered.list  > $new_database_fo
 
 
 
-python $scriptDir/postprocess_min1.py $mOTU_folder/ $new_database_folder/$newDBName/ $scriptDir/cutoffs_fscore_specIAsRef.csv $threads
+python $scriptDir/postprocess_min1.py $mOTU_folder/ $new_database_folder/$newDBName/$newDBName.padded $new_database_folder/$newDBName/ $scriptDir/cutoffs_fscore_specIAsRef.csv $threads
 
 python $scriptDir/extend_mOTUs_getClusterTaxonomy.py $new_database_folder/$newDBName/vsearch/$newDBName.clustering $taxonomyFile > $new_database_folder/$newDBName/vsearch/$newDBName.taxonomy
 
@@ -220,7 +220,7 @@ cat $mOTU_folder/db_mOTU/db_mOTU_DB_CEN.fasta.annotations $new_database_folder/$
 cat $mOTU_folder/db_mOTU/db_mOTU_DB_NR.fasta $new_database_folder/$newDBName/updated_min1_db_mOTU/db_mOTU_DB_NR.fasta $new_database_folder/$newDBName/$newDBName.padded > $new_database_folder/$newDBName/db_mOTU/db_mOTU_DB_NR.fasta
 cat $mOTU_folder/db_mOTU/db_mOTU_genes_length_NR $new_database_folder/$newDBName/updated_min1_db_mOTU/db_mOTU_genes_length_NR $new_database_folder/$newDBName/${newDBName}.new.len > $new_database_folder/$newDBName/db_mOTU/db_mOTU_genes_length_NR
 cat $mOTU_folder/db_mOTU/db_mOTU_MAP_genes_to_MGCs.tsv $new_database_folder/$newDBName/updated_min1_db_mOTU/db_mOTU_MAP_genes_to_MGCs.tsv $new_database_folder/$newDBName/${newDBName}.map > $new_database_folder/$newDBName/db_mOTU/db_mOTU_MAP_genes_to_MGCs.tsv
-cat $mOTU_folder/db_mOTU/db_mOTU_MAP_MGCs_to_mOTUs_in-line.tsv $new_database_folder/$newDBName/updated_min1_db_mOTU/db_mOTU_MAP_MGCs_to_mOTUs_in-line.tsv $new_database_folder/$newDBName/vsearch/$newDBName.mOTU-LG.map.line.tsv > $new_database_folder/$newDBName/db_mOTU/db_mOTU_MAP_MGCs_to_mOTUs_in-line.tsv
+cat $mOTU_folder/db_mOTU/db_mOTU_MAP_MGCs_to_mOTUs_in-line.tsv $new_database_folder/$newDBName/updated_min1_db_mOTU/db_mOTU_MAP_MGCs_to_mOTUs_in-line.tsv <(echo) $new_database_folder/$newDBName/vsearch/$newDBName.mOTU-LG.map.line.tsv > $new_database_folder/$newDBName/db_mOTU/db_mOTU_MAP_MGCs_to_mOTUs_in-line.tsv
 cat $mOTU_folder/db_mOTU/db_mOTU_MAP_MGCs_to_mOTUs.tsv $new_database_folder/$newDBName/updated_min1_db_mOTU/db_mOTU_MAP_MGCs_to_mOTUs.tsv $new_database_folder/$newDBName//$newDBName.mOTU-LG.map.tsv > $new_database_folder/$newDBName/db_mOTU/db_mOTU_MAP_MGCs_to_mOTUs.tsv
 cat $mOTU_folder/db_mOTU/db_mOTU_padding_coordinates_CEN.tsv $new_database_folder/$newDBName/updated_min1_db_mOTU/db_mOTU_padding_coordinates_CEN.tsv > $new_database_folder/$newDBName/db_mOTU/db_mOTU_padding_coordinates_CEN.tsv
 cat $mOTU_folder/db_mOTU/db_mOTU_padding_coordinates_NR.tsv $new_database_folder/$newDBName/updated_min1_db_mOTU/db_mOTU_padding_coordinates_NR.tsv $new_database_folder/$newDBName/$newDBName.padded.coords > $new_database_folder/$newDBName/db_mOTU/db_mOTU_padding_coordinates_NR.tsv

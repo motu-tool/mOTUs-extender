@@ -60,8 +60,9 @@ rule prodigalfetchMgs:
         mkdir -p {params.outdir}genome/
         mkdir -p {params.outdir}prodigal/
         mkdir -p {params.outdir}fetchMGs/
-        rsync {input.fa} {params.outdir}genome/
-       	prodigal -i {input.fa} -a {params.faa} -d {params.fna} -f gff -o {params.gff} -c -m -g 11 -p single
+        python {script_folder}/reformat_genome.py {input.fa} {params.outdir}genome/{wildcards.sample}.fa
+        #rsync {input.fa} {params.outdir}genome/
+       	prodigal -i {params.outdir}genome/{wildcards.sample}.fa -a {params.faa} -d {params.fna} -f gff -o {params.gff} -c -m -g 11 -p single
         rm -rf {params.outdir}fetchMGs/{wildcards.sample}-bestMGs/
         fetchMGs.pl -m extraction -v -i -d {params.fna} -o {params.outdir}fetchMGs/{wildcards.sample}-bestMGs/ {params.faa} -t {threads}
         mkdir -p {params.outdir}fetchMGs/{wildcards.sample}-bestMGs-renamed/
@@ -69,7 +70,7 @@ rule prodigalfetchMgs:
         rm -r {params.outdir}fetchMGs/{wildcards.sample}-bestMGs/hmmResults/
         rm -r {params.outdir}fetchMGs/{wildcards.sample}-bestMGs/temp/
         if [ -f {params.outdir}fetchMGs/{wildcards.sample}-bestMGs-renamed/motus.mgs.count.ok ]; then
-            sh {script_folder}/extend_mOTUs_addMarkerGenes.sh {input.fa} {wildcards.sample} {dest_path_extension} {script_folder} {temp_db_folder_path} {params.outdir}fetchMGs/{wildcards.sample}-bestMGs-renamed/ {mapfile}
+            sh {script_folder}/extend_mOTUs_addMarkerGenes.sh {params.outdir}genome/{wildcards.sample}.fa {wildcards.sample} {dest_path_extension} {script_folder} {temp_db_folder_path} {params.outdir}fetchMGs/{wildcards.sample}-bestMGs-renamed/ {mapfile}
         fi
         
         ";
