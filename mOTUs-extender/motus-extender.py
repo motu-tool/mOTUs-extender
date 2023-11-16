@@ -117,7 +117,7 @@ Input options:
     logging.info(f'Downloading mOTUs {MOTUS_EXTENDER_VERSION} database')
     orig_db_folder = input_workfolder.joinpath('orig_db')
     orig_db_folder.mkdir(parents=True, exist_ok=True)
-    download_command = f'curl https://zenodo.org/record/7778108/files/db_mOTU_v3.1.0.tar.gz -o {orig_db_folder}/db_mOTU_v3.1.0.tar.gz'
+    download_command = f'wget https://zenodo.org/record/7778108/files/db_mOTU_v3.1.0.tar.gz -O {orig_db_folder}/db_mOTU_v3.1.0.tar.gz'
     check_call(download_command)
     logging.info(f'Uncompressing mOTUs {MOTUS_EXTENDER_VERSION} database')
     untar_command = f'tar -xzvf {orig_db_folder}/db_mOTU_v3.1.0.tar.gz -C {orig_db_folder}'
