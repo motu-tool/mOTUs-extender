@@ -258,6 +258,11 @@ Finished building vsearch database on test_extension/extension/temp_db_folder/db
 
 ### 2. mOTUs extender - membership
 
+> **⚠️ WARNING:**  
+> Running `motus-extender.py membership` with 32 threads requires a very large amount of RAM, it is highly recommended to run it with no more than 8 threads at 64 GB of memory.  
+>  
+> Further note: If a job fails due to insufficient memory, `motus-extender.py` may report genomes as "Novel" even though the assignment failed. You will not see an error or get a report for a failed job. 
+
 ```
 python mOTUs-extender/mOTUs-extender/motus-extender.py membership -w test_extension/extension/ -g test_extension/genomes/ -t 32
 ```
